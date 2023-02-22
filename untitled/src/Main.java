@@ -206,6 +206,7 @@ public class Main extends JFrame {
             g.drawLine(r1, 0, r1, this.getHeight());
             g.drawImage(new ImageIcon("untitled//src//GoblinMain.jpg").getImage(), this.getWidth()-200, this.getHeight()-200, 200, 200, this);
             g.drawImage(new ImageIcon("untitled//src//fireball1.jpg").getImage(), this.getWidth()-200, this.getHeight()-400, 200, 200, this);
+            g.drawImage(new ImageIcon("untitled//src//Archer.png").getImage(), this.getWidth()-200, this.getHeight()-600, 200, 200, this);
             //g.drawImage(new ImageIcon("untitled//src//background.png").getImage(), 0, 0, this.getWidth(), this.getHeight(), this);
             // Теперь будем ТУТ всё рисовать
             if (point != null)
@@ -246,8 +247,8 @@ public class Main extends JFrame {
                 units[2].y = (this.getHeight()/9);
             }
             if (units[3]!=null) {
-                units[3].x = this.getWidth()/8*6;
-                units[3].y = (int)(this.getHeight()/9*6.5);
+                units[3].x = this.getWidth() / 8 * 6;
+                units[3].y = (int) (this.getHeight() / 9 * 6.5);
             }
 
                 for (int i = 0; i <= 5; i++) {
@@ -304,7 +305,7 @@ public class Main extends JFrame {
             if (su==1) {
                 g.drawOval(cX-t1.r, cY-t1.r, 2*t1.r, 2*t1.r);
             }
-            System.out.println(su);
+
         }
 
 
@@ -359,6 +360,15 @@ public class Main extends JFrame {
                 s1-=4;
                 spells[kSpell-1] = new Spell(1, 1, xRel, yRel);
             }
+            else if(pressX<this.getWidth()&&pressX>this.getWidth()-200&&pressY<this.getHeight()-400&&pressY>this.getHeight()-600&&xRel<this.getWidth()-200&&s1>5) {
+                if (xRel<this.getWidth()/2+20) {
+                    xRel = this.getWidth()/2+20;
+                }
+                mouse=0;
+                kUnit++;
+                s1-=5;
+                units[kUnit-1] = new Unit(2, 1, xRel, yRel);
+            }
             else {
                 mouse=0;
             }
@@ -405,9 +415,12 @@ public class Main extends JFrame {
                 type = 1;
                 r0 = this.getWidth()-200;
             }
-
+            if (key==51) {
+                su=0;
+                type=2;
+            }
             if (key==10) {
-                if (type==1&&su==0&&s0>=2) {
+                if (type==1&&su==0&&s0>2) {
                     kUnit+=4;
                     s0-=2;
 
@@ -416,12 +429,18 @@ public class Main extends JFrame {
                     units[kUnit - 2] = new Unit(1, 0, cX-20, cY-20);
                     units[kUnit - 1] = new Unit(1, 0, cX-20, cY+20);
                 }
-                if (type==1&&su==1&&s0>=4) {
+                else if (type==1&&su==1&&s0>4) {
                     kSpell++;
 
                     spells[kSpell-1] = new Spell(1, 0, cX, cY);
                     s0-=spells[kSpell-1].cost;
                 }
+                else if(type==2&&su==0&&s0>5) {
+                    kUnit++;
+                    s0-=5;
+                    units[kUnit-1] = new Unit(2, 0, cX, cY);
+                }
+
             }
             if (key==37&&cX>200) {
                 cX-=this.getWidth()/40;

@@ -55,6 +55,23 @@ public class Unit {
             this.splash=false;
             this.cost=0;
         }
+        if (type==2) {
+            this.x=x;
+            this.y=y;
+            this.w=75;
+            this.h=90;
+            this.hp=1000;
+            this.dd=200;
+            this.speed=2;
+            this.attackSpeed=40;
+            this.r=300;
+            this.type=2;
+            this.command=command;
+            this.fly=false;
+            this.k1=-1;
+            this.splash=false;
+            this.cost=5;
+        }
 
     }
     public boolean isEnemy(Unit unit) {
