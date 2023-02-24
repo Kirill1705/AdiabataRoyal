@@ -268,10 +268,10 @@ public class Main extends JFrame {
 
                 }
             /*if (k<10||(k>=20&&k<30)) {
-                g.drawImage(new ImageIcon("untitled//src//1front1.png").getImage(), 150, 645, 100, 100, this);
+                g.drawImage(new ImageIcon("untitled//src//1front2.png").getImage(), 150, 645, 100, 100, this);
             }
             if (k>=10&&k<20) {
-                g.drawImage(new ImageIcon("untitled//src//1front2.png").getImage(), 150, 45, 100, 100, this);
+                g.drawImage(new ImageIcon("untitled//src//1front1.png").getImage(), 150, 45, 100, 100, this);
             }
             if (k>=30&&k<=40) {
                 g.drawImage(new ImageIcon("untitled//src//1front3.png").getImage(), 150, 345, 100, 100, this);
@@ -284,14 +284,14 @@ public class Main extends JFrame {
 
             for (int i = 6; i < kUnit; i++) {
                 if (units[i]!=null) {
-                    if (units[i].type == 1) {
+
                         g.drawImage(new ImageIcon("untitled//src//"+units[i].s+".png").getImage(), units[i].x, units[i].y, units[i].w, units[i].h, this);
-                        if (units[i].hp!=200&&units[i].hp>0) {
+                        if (units[i].hp!=units[i].maxhp&&units[i].hp>0) {
                             g.setColor(Color.RED);
-                            g.fillRect(units[i].x, units[i].y - units[i].h / 4, units[i].w * units[i].hp / 200, 4);
+                            g.fillRect(units[i].x, units[i].y - units[i].h / 4, units[i].w * units[i].hp / units[i].maxhp, 4);
                             g.drawRect(units[i].x, units[i].y - units[i].h / 4, units[i].w, 4);
                         }
-                    }
+
                 }
             }
             for (int i = 0; i < kSpell; i++) {

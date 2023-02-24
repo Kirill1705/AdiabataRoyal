@@ -7,6 +7,7 @@ public class Unit {
     public int w;
     public int h;
     public int hp;
+    public int maxhp;
     public int dd;
     public int speed;
     public int attackSpeed;
@@ -25,6 +26,7 @@ public class Unit {
             this.w=50;
             this.h=70;
             this.hp=200;
+            this.maxhp=200;
             this.dd=46;
             this.speed=6;
             this.attackSpeed=25;
@@ -44,6 +46,7 @@ public class Unit {
             this.w=150;
             this.h=150;
             this.hp=5000;
+            this.maxhp=5000;
             this.dd=100;
             this.speed=0;
             this.attackSpeed=40;
@@ -61,9 +64,10 @@ public class Unit {
             this.w=75;
             this.h=90;
             this.hp=1000;
-            this.dd=200;
+            this.maxhp=1000;
+            this.dd=400;
             this.speed=2;
-            this.attackSpeed=40;
+            this.attackSpeed=30;
             this.r=300;
             this.type=2;
             this.command=command;
@@ -71,6 +75,7 @@ public class Unit {
             this.k1=-1;
             this.splash=false;
             this.cost=5;
+            this.s="2front2";
         }
 
     }
@@ -135,31 +140,44 @@ public class Unit {
             this.y+=dry;
         }
         if (this.type!=0) {
-            if (dry > 0 && Math.abs(drx) <= dry && (k % (360 / this.speed) >= 0 && (k % (360 / this.speed) < 90 / this.speed) || (k % (360 / this.speed) >= 180 / this.speed && k % (360 / this.speed) < 270 / this.speed))) {
-                s = this.type + "front1";
-            } else if (dry > 0 && Math.abs(drx) <= dry && k % (360 / this.speed) >= 90 / this.speed && k % (360 / this.speed) < 180 / this.speed) {
+            if (dry > 0 && Math.abs(drx) < dry && (k % (120 / this.speed) >= 60 / this.speed && k % (120 / this.speed) < 90 / this.speed)) {
                 s = this.type + "front2";
-            } else if (dry > 0 && Math.abs(drx) <= dry) {
+            } else if (dry > 0 && Math.abs(drx) < dry && k % (120 / this.speed) >= 30 / this.speed && k % (120 / this.speed) < 60 / this.speed) {
+                s = this.type + "front1";
+            }
+            else if (dry > 0 && Math.abs(drx) < dry && (k % (120 / this.speed) >= 0 && (k % (120 / this.speed) < 30 / this.speed))) {
+                s = this.type+"front4";
+            }else if (dry > 0 && Math.abs(drx) < dry) {
                 s = this.type + "front3";
-            } else if (drx < 0 && Math.abs(dry) <= -drx && (k % (360 / this.speed) >= 0 && (k % (360 / this.speed) < 90 / this.speed) || (k % (360 / this.speed) >= 180 / this.speed && k % (360 / this.speed) < 270 / this.speed))) {
-                s = this.type + "left1";
-            } else if (drx < 0 && Math.abs(dry) <= -drx && k % (360 / this.speed) >= 90 / this.speed && k % (360 / this.speed) < 180 / this.speed) {
+            } else if (drx < 0 && Math.abs(dry) <= -drx &&  (k % (120 / this.speed) >= 60 / this.speed && k % (120 / this.speed) < 90 / this.speed)) {
                 s = this.type + "left2";
-            } else if (drx < 0 && Math.abs(dry) <= -drx) {
+            } else if (drx < 0 && Math.abs(dry) <= -drx && k % (120 / this.speed) >= 30 / this.speed && k % (120 / this.speed) < 60 / this.speed) {
+                s = this.type + "left1";
+            }
+            else if (drx < 0 && Math.abs(dry) <= -drx && (k % (120 / this.speed) >= 0 && (k % (120 / this.speed) < 30 / this.speed))) {
+                s = this.type+"left4";
+            }else if (drx < 0 && Math.abs(dry) <= -drx) {
                 s = this.type + "left3";
-            } else if (dry <= 0 && Math.abs(drx) < -dry && (k % (360 / this.speed) >= 0 && (k % (360 / this.speed) < 90 / this.speed) || (k % (360 / this.speed) >= 180 / this.speed && k % (360 / this.speed) < 270 / this.speed))) {
-                s = this.type + "back1";
-            } else if (dry <= 0 && Math.abs(drx) < -dry && k % (360 / this.speed) >= 90 / this.speed && k % (360 / this.speed) < 180 / this.speed) {
+            } else if (dry <= 0 && Math.abs(drx) < -dry &&  (k % (120 / this.speed) >= 90 / this.speed && k % (120 / this.speed) < 90 / this.speed)) {
                 s = this.type + "back2";
-            } else if (dry <= 0 && Math.abs(drx) < -dry) {
+            } else if (dry <= 0 && Math.abs(drx) < -dry && k % (120 / this.speed) >= 30 / this.speed && k % (120 / this.speed) < 60 / this.speed) {
+                s = this.type + "back1";
+            }
+            else if (dry <= 0 && Math.abs(drx) < -dry && (k % (120 / this.speed) >= 0 && (k % (120 / this.speed) < 30 / this.speed))) {
+                s = this.type+"back4";
+            }else if (dry <= 0 && Math.abs(drx) < -dry) {
                 s = this.type + "back3";
-            } else if (drx >= 0 && Math.abs(dry) < drx && (k % (360 / this.speed) >= 0 && (k % (360 / this.speed) < 90 / this.speed) || (k % (360 / this.speed) >= 180 / this.speed && k % (360 / this.speed) < 270 / this.speed))) {
-                s = this.type + "right1";
-            } else if (drx >= 0 && Math.abs(dry) < drx && k % (360 / this.speed) >= 90 / this.speed && k % (360 / this.speed) < 180 / this.speed) {
+            } else if (drx >= 0 && Math.abs(dry) <= drx &&  (k % (120 / this.speed) >= 60 / this.speed && k % (120 / this.speed) < 90 / this.speed)) {
                 s = this.type + "right2";
+            }
+            else if (drx >= 0 && Math.abs(dry) <= drx && (k % (120 / this.speed) >= 0 && (k % (120 / this.speed) < 30 / this.speed))) {
+                s = this.type + "right4";
+            }else if (drx >= 0 && Math.abs(dry) <= drx && k % (120 / this.speed) >= 30 / this.speed && k % (120 / this.speed) < 60 / this.speed) {
+                s = this.type + "right1";
             } else {
                 s = this.type + "right3";
             }
+            //System.out.println(this.s);
         }
     }
     public void attackImage(int k, int k1, String s) {
@@ -173,16 +191,15 @@ public class Unit {
             else {
                 thiss=s.substring(0, s.length()-1);
             }
-            if (k % this.attackSpeed+k1 < this.attackSpeed / 4) {
+            if ((k+k1) % this.attackSpeed < this.attackSpeed / 4) {
                 this.s = thiss + 1;
-            } else if (k % this.attackSpeed+k1 >= this.attackSpeed / 4 && k % this.attackSpeed+k1 < this.attackSpeed / 2) {
+            } else if ((k+k1) % this.attackSpeed >= this.attackSpeed / 4 && (k+k1) % this.attackSpeed < this.attackSpeed / 2) {
                 this.s = thiss + 2;
-            } else if (k % this.attackSpeed+k1 >= this.attackSpeed / 2 && k % this.attackSpeed+k1 < this.attackSpeed * 3 / 4) {
+            } else if ((k+k1) % this.attackSpeed >= this.attackSpeed / 2 && (k+k1) % this.attackSpeed < this.attackSpeed * 3 / 4) {
                 this.s = thiss + 3;
             } else {
                 this.s = thiss + 4;
             }
-            //System.out.println(this.s);
         }
     }
     public void deathImage(String s) {
