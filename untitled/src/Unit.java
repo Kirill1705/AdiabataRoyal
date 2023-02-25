@@ -19,6 +19,7 @@ public class Unit {
     public int k1;
     public int cost;
     public  int death;
+    public boolean shell;
     public Unit(int type, int command, int x,int y) {
         if(type==1) {
             this.x=x-25;
@@ -39,6 +40,7 @@ public class Unit {
             this.cost=2;
             this.s="1front1";
             this.death=100;
+            this.shell=false;
         }
         if(type==0) {
             this.x=x;
@@ -47,9 +49,9 @@ public class Unit {
             this.h=150;
             this.hp=5000;
             this.maxhp=5000;
-            this.dd=100;
+            this.dd=0;
             this.speed=0;
-            this.attackSpeed=40;
+            this.attackSpeed=30;
             this.r=400;
             this.type=0;
             this.command=command;
@@ -57,6 +59,7 @@ public class Unit {
             this.k1=-1;
             this.splash=false;
             this.cost=0;
+            this.shell=true;
         }
         if (type==2) {
             this.x=x;
@@ -65,7 +68,7 @@ public class Unit {
             this.h=90;
             this.hp=1000;
             this.maxhp=1000;
-            this.dd=400;
+            this.dd=0;
             this.speed=2;
             this.attackSpeed=30;
             this.r=300;
@@ -76,6 +79,7 @@ public class Unit {
             this.splash=false;
             this.cost=5;
             this.s="2front2";
+            this.shell=true;
         }
 
     }

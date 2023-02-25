@@ -6,13 +6,9 @@ import java.awt.event.*;
 public class Main extends JFrame {
 
     public int countOfClick = 0;
-    Point point = new Point(0, 0);
-    public Point pH = new Point(750, 25);
-    public Point pL = new Point(750, 710);
+
     public  Point[] points = new Point[4];
-
-
-
+    public Shell[] shells = new Shell[1000];
     public int cX = 500;
     public Spell t1 = new Spell(1, 1, 0, 0);
     public int su = 0;
@@ -30,6 +26,7 @@ public class Main extends JFrame {
     public int xRel = -10;
     public int yRel = -10;
     public int kUnit = 6;
+    public  int kShell = 0;
     public int k = 0;
     public int kSpell = 0;
     public Unit[] units = new Unit[5000];
@@ -51,9 +48,18 @@ public class Main extends JFrame {
                 }
                 else {
                     if (s0<10)
-                        s0 += 0.04;
-                    if (s0<10)
-                        s1 += 0.04;
+                        s0 += 0.02;
+                    if (s1<10)
+                        s1 += 0.02;
+                }
+                for (int i = 0; i <kShell; i++) {
+                    if (shells[i]!=null&&shells[i].goal==null) {
+                        shells[i]=null;
+                        System.out.println("+");
+                    }
+                    if (shells[i]!=null&&!shells[i].shelldr()) {
+                        shells[i]=null;
+                    }
                 }
                 for (int i = 0; i < kUnit; i++) {
                     if (units[i]!=null&&units[i].hp>0) {
@@ -81,6 +87,10 @@ public class Main extends JFrame {
                                 }
                                 if ((k + units[i].k1) % units[i].attackSpeed == 0) {
                                     goal.hp -= units[i].dd;
+                                    if (units[i].shell) {
+                                        shells[kShell] = new Shell(units[i].type, units[i].command, units[i].x, units[i].y, goal);
+                                        kShell++;
+                                    }
                                 }
                             }
                         if (units[i].type==0&&units[i].hp<=0) {
@@ -235,35 +245,35 @@ public class Main extends JFrame {
             g.drawString(Integer.toString((int)(s0)), 16, this.getHeight()-30);
             g.drawString(Integer.toString((int)(s1)), this.getWidth()-16, this.getHeight()-30);
             if (units[0]!=null) {
-                units[0].x = this.getWidth() / 8;
-                units[0].y = this.getHeight() / 9;
+                units[0].x = this.getWidth() / 5;
+                units[0].y = this.getHeight() / 7;
             }
             if (units[1]!=null) {
-                units[1].x = this.getWidth()/8;
-                units[1].y = (int)(this.getHeight()/9*6.5);
+                units[1].x = this.getWidth()/5;
+                units[1].y =this.getHeight()/7*6;
             }
             if (units[2]!=null) {
-                units[2].x = this.getWidth()/8*6;
-                units[2].y = (this.getHeight()/9);
+                units[2].x = this.getWidth()/5*4;
+                units[2].y = (this.getHeight()/7);
             }
             if (units[3]!=null) {
-                units[3].x = this.getWidth() / 8 * 6;
-                units[3].y = (int) (this.getHeight() / 9 * 6.5);
+                units[3].x = this.getWidth() / 5 * 4;
+                units[3].y = this.getHeight() / 7 * 6;
             }
 
                 for (int i = 0; i <= 5; i++) {
                     if (units[i]!=null) {
                         g.setColor(Color.RED);
-
-                        g.fillRect(units[i].x-20, units[i].y-40, 150*units[i].hp/5000, 10);
-                        g.drawString(Integer.toString(units[i].hp), units[i].x-21, units[i].y-41 );
-                        g.drawRect(units[i].x-20, units[i].y-40, 150, 10);
+                        g.fillRect(units[i].x-units[i].w/2, units[i].y-units[i].h/4*3+20, 150*units[i].hp/5000, 10);
+                        g.drawString(Integer.toString(units[i].hp), units[i].x-units[i].w/2, units[i].y-units[i].h/4*3+19 );
+                        g.drawRect(units[i].x-units[i].w/2, units[i].y-units[i].h/4*3+20, 150, 10);
                         //System.out.println(units[i].hp);
 
                         if (i==0||i==1)
-                            g.drawImage(new ImageIcon("untitled//src//town.png").getImage(), units[i].x - 30, units[i].y - 30, units[i].w, units[i].h, this);
+                            g.drawImage(new ImageIcon("untitled//src//town.png").getImage(), units[i].x - units[i].w/2, units[i].y - units[i].h/2, units[i].w, units[i].h, this);
                         if (i==2||i==3)
-                            g.drawImage(new ImageIcon("untitled//src//town1.png").getImage(), units[i].x-30, units[i].y - 30, units[i].w, units[i].h, this);
+                            g.drawImage(new ImageIcon("untitled//src//town1.png").getImage(), units[i].x-units[i].w/2, units[i].y - units[i].h/2, units[i].w, units[i].h, this);
+                        //g.drawOval(units[i].x-units[i].r, units[i].y-units[i].r, 2*units[i].r, 2*units[i].r);
                     }
 
                 }
@@ -285,11 +295,11 @@ public class Main extends JFrame {
             for (int i = 6; i < kUnit; i++) {
                 if (units[i]!=null) {
 
-                        g.drawImage(new ImageIcon("untitled//src//"+units[i].s+".png").getImage(), units[i].x, units[i].y, units[i].w, units[i].h, this);
+                        g.drawImage(new ImageIcon("untitled//src//"+units[i].s+".png").getImage(), units[i].x-units[i].w/2, units[i].y-units[i].h/2, units[i].w, units[i].h, this);
                         if (units[i].hp!=units[i].maxhp&&units[i].hp>0) {
                             g.setColor(Color.RED);
-                            g.fillRect(units[i].x, units[i].y - units[i].h / 4, units[i].w * units[i].hp / units[i].maxhp, 4);
-                            g.drawRect(units[i].x, units[i].y - units[i].h / 4, units[i].w, 4);
+                            g.fillRect(units[i].x-units[i].w/2, units[i].y - units[i].h / 4*3, units[i].w * units[i].hp / units[i].maxhp, 4);
+                            g.drawRect(units[i].x-units[i].w/2, units[i].y - units[i].h / 4*3, units[i].w, 4);
                         }
 
                 }
@@ -304,6 +314,11 @@ public class Main extends JFrame {
             }
             if (su==1) {
                 g.drawOval(cX-t1.r, cY-t1.r, 2*t1.r, 2*t1.r);
+            }
+            for (int i = 0; i < kShell; i++) {
+                if (shells[i]!=null) {
+                    g.drawImage(new ImageIcon("untitled//src//"+shells[i].s+".png").getImage(), shells[i].x-shells[i].w/2, shells[i].y-shells[i].h/2, shells[i].w, shells[i].h, this);
+                }
             }
 
         }
@@ -418,6 +433,10 @@ public class Main extends JFrame {
             if (key==51) {
                 su=0;
                 type=2;
+                r0=this.getWidth()/2;
+                if (cX>this.getWidth()/2-40) {
+                    cX=this.getWidth()/2-40;
+                }
             }
             if (key==10) {
                 if (type==1&&su==0&&s0>2) {
