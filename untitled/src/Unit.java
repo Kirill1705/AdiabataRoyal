@@ -2,6 +2,8 @@ import java.awt.*;
 
 public class Unit {
     public String s;
+    public Unit GOAL;
+    public boolean building;
     public int x;
     public int y;
     public int w;
@@ -21,9 +23,13 @@ public class Unit {
     public  int death;
     public boolean shell;
     public Unit(int type, int command, int x,int y) {
+        this.x=x;
+        this.y=y;
+        this.type=type;
+        this.command=command;
+        this.k1=-1;
+        //Гоблины
         if(type==1) {
-            this.x=x-25;
-            this.y=y-25;
             this.w=50;
             this.h=70;
             this.hp=200;
@@ -32,19 +38,16 @@ public class Unit {
             this.speed=6;
             this.attackSpeed=25;
             this.r=10;
-            this.type=1;
-            this.command=command;
             this.fly=false;
-            this.k1=-1;
             this.splash=false;
             this.cost=2;
             this.s="1front1";
             this.death=100;
             this.shell=false;
+            this.building=false;
         }
-        if(type==0) {
-            this.x=x;
-            this.y=y;
+        //Королевская башня
+        else if(type==0) {
             this.w=150;
             this.h=150;
             this.hp=5000;
@@ -52,18 +55,15 @@ public class Unit {
             this.dd=0;
             this.speed=0;
             this.attackSpeed=30;
-            this.r=400;
-            this.type=0;
-            this.command=command;
+            this.r=325;
             this.fly=false;
-            this.k1=-1;
             this.splash=false;
             this.cost=0;
             this.shell=true;
+            this.building=false;
         }
-        if (type==2) {
-            this.x=x;
-            this.y=y;
+        //Лучник
+        else if (type==2) {
             this.w=75;
             this.h=90;
             this.hp=1000;
@@ -71,17 +71,48 @@ public class Unit {
             this.dd=0;
             this.speed=2;
             this.attackSpeed=30;
-            this.r=300;
-            this.type=2;
-            this.command=command;
+            this.r=250;
             this.fly=false;
-            this.k1=-1;
             this.splash=false;
             this.cost=5;
             this.s="2front2";
             this.shell=true;
+            this.building=false;
+            this.death=100;
         }
-
+        //Пушка
+        else if(type==4) {
+            this.w=100;
+            this.h=100;
+            this.speed=0;
+            this.attackSpeed=30;
+            this.shell=true;
+            this.maxhp=500;
+            this.r=260;
+            this.fly=false;
+            this.splash=false;
+            this.hp=500;
+            this.s="4front1";
+            this.cost=3;
+            this.dd=0;
+            this.building=true;
+        }
+        if (type==5) {
+            this.w=50;
+            this.h=50;
+            this.speed=4;
+            this.attackSpeed=30;
+            this.shell=true;
+            this.maxhp=500;
+            this.r=60;
+            this.fly=true;
+            this.splash=true;
+            this.hp=this.maxhp;
+            this.s="5front1";
+            this.cost=4;
+            this.dd=0;
+            this.building=false;
+        }
     }
     public boolean isEnemy(Unit unit) {
         return this.command!=unit.command;
@@ -92,11 +123,13 @@ public class Unit {
     public int getPointDistance(Point point) {
         return (int)Math.sqrt((this.x-point.x)*(this.x-point.x)+(this.y-point.y)*(this.y-point.y));
     }
-    public void drx(Unit goal, Point[] points, int k) {
+    public boolean drx(Unit goal, Point[] points, int k, int min) {
         double div;
         double drx;
         double dry;
-        if (goal.x>points[0].x-10&&this.x>points[0].x-10||goal.x<points[2].x+10&&this.x<points[2].x+10) {
+        boolean b;
+        //System.out.println(min);
+        if (goal.x>points[0].x-10&&this.x>points[0].x-10||goal.x<points[2].x+10&&this.x<points[2].x+10||this.GOAL!=null) {
             if (goal.y - this.y == 0)
                 div = 1000;
             else
@@ -109,14 +142,21 @@ public class Unit {
             if (goal.x - this.x < 0) {
                 drx = -drx;
             }
-            this.x+=drx;
             if (goal.y - this.y < 0) {
                 dry = -dry;
             }
-            this.y+=dry;
+            if (this.r + this.w / 3 + goal.w / 3 < min) {
+                this.y += dry;
+                this.x += drx;
+                this.GOAL=null;
+                b=true;
+            }
+            else {
+                this.GOAL=goal;
+                b=false;
+            }
         }
         else {
-            //int minD = 5000;
             Point point = null;
             int minD = 5000;
             for (int i = 0; i < 4; i++) {
@@ -137,11 +177,19 @@ public class Unit {
             if (point.x - this.x < 0) {
                 drx = -drx;
             }
-            this.x+=drx;
             if (point.y - this.y < 0) {
                 dry = -dry;
             }
-            this.y+=dry;
+            if (this.r + this.w / 3 + goal.w / 3 < min) {
+                this.y += dry;
+                this.x += drx;
+                this.GOAL=null;
+                b=true;
+            }
+            else {
+                b = false;
+                this.GOAL=goal;
+            }
         }
         if (this.type!=0) {
             if (dry > 0 && Math.abs(drx) < dry && (k % (120 / this.speed) >= 60 / this.speed && k % (120 / this.speed) < 90 / this.speed)) {
@@ -183,6 +231,8 @@ public class Unit {
             }
             //System.out.println(this.s);
         }
+        //System.out.println(b);
+        return b;
     }
     public void attackImage(int k, int k1, String s) {
         if (this.type!=0) {
@@ -228,6 +278,8 @@ public class Unit {
             }
             this.death--;
             //System.out.println(this.s);
+            //System.out.println(this.death);
+            System.out.println(this.hp);
         }
     }
 }

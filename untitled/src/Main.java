@@ -33,12 +33,21 @@ public class Main extends JFrame {
     public Spell[] spells = new Spell[1000];
 
     private MyPanel panel;
+    public boolean b;
     public void start() {
         javax.swing.Timer timer = new Timer(20, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
                 k++;
+                points[0].x=panel.getWidth()/2-30;
+                points[0].y=70;
+                points[1].x=panel.getWidth()/2-30;
+                points[1].y=panel.getHeight()-80;
+                points[2].x=panel.getWidth()/2+30;
+                points[2].y=70;
+                points[3].x=panel.getWidth()/2+30;
+                points[3].y=panel.getHeight()-80;
 
                 if(k<6000) {
                     if (s0<10)
@@ -65,30 +74,36 @@ public class Main extends JFrame {
                     if (units[i]!=null&&units[i].hp>0) {
                         int minD = 5000;
                         Unit goal = null;
-                        for (int j = 0; j < kUnit; j++) {
-                            if (units[j] != null &&units[j].hp>0&& i != j && units[i].getDistance(units[j]) < minD && units[i].isEnemy(units[j])) {
-                                minD = units[i].getDistance(units[j]);
-                                goal = units[j];
+                        if (units[i].GOAL==null||units[i].GOAL.hp<=0) {
+                            //System.out.println(units[i].hp);
+                            for (int j = 0; j < kUnit; j++) {
+                                if (units[j] != null && units[j].hp > 0 && i != j && units[i].getDistance(units[j]) < minD && units[i].isEnemy(units[j])) {
+                                    minD = units[i].getDistance(units[j]);
+                                    goal = units[j];
+                                }
                             }
+                        }
+                        else {
+                            goal=units[i].GOAL;
+                            minD=units[i].getDistance(units[i].GOAL);
                         }
 
 
 
-                            if (goal!=null&& units[i].r + units[i].w / 3 + goal.w / 3 < minD) {
-                                units[i].drx(goal, points, k);
-
+                            if (goal!=null) {
+                                b=units[i].drx(goal, points, k, minD);
                             }
 
 
-                             else if(goal!=null){
+                              if(units[i].GOAL!=null&&!b){
                                  units[i].attackImage(k, units[i].k1, units[i].s);
                                 if (units[i].k1 == -1) {
                                     units[i].k1 = k % units[i].attackSpeed;
                                 }
                                 if ((k + units[i].k1) % units[i].attackSpeed == 0) {
-                                    goal.hp -= units[i].dd;
+                                    units[i].GOAL.hp -= units[i].dd;
                                     if (units[i].shell) {
-                                        shells[kShell] = new Shell(units[i].type, units[i].command, units[i].x, units[i].y, goal);
+                                        shells[kShell] = new Shell(units[i].type, units[i].command, units[i].x, units[i].y, units[i].GOAL);
                                         kShell++;
                                     }
                                 }
@@ -189,8 +204,7 @@ public class Main extends JFrame {
     class MyPanel extends JPanel implements MouseListener, MouseMotionListener, KeyListener {
         public Point point = null;
 
-        public Point beginPoint = null;
-        public Point endPoint = null;
+
 
         public MyPanel(boolean isDoubleBuffered) {
             super(isDoubleBuffered);
@@ -200,32 +214,26 @@ public class Main extends JFrame {
             addMouseListener(this);
             addMouseMotionListener(this);
             addKeyListener(this);
-
+            for (int i = 0; i < 4; i++) {
+                points[i]=new Point(0, 0);
+            }
         }
 
         @Override
         public void paint(Graphics g) {
             super.paint(g);
-            points[0] = new Point(this.getWidth()/2-30, 40);
-            points[1] = new Point(this.getWidth()/2-30, this.getHeight()-60);
-            points[2] = new Point(this.getWidth()/2 +30, 40);
-            points[3] = new Point(this.getWidth()/2+30, this.getHeight()-60);
+            g.drawImage(new ImageIcon("untitled//src//background.png").getImage(), 0, 0, this.getWidth(), this.getHeight(), this);
 
-                g.drawImage(new ImageIcon("untitled//src//river.jpg").getImage(), this.getWidth()/2-50, 100, 100, this.getHeight()-200, this);
+                g.drawImage(new ImageIcon("untitled//src//river.jpg").getImage(), points[0].x, points[0].y, points[2].x-points[0].x, points[1].y-points[0].y, this);
 
-            g.drawLine(r1, 0, r1, this.getHeight());
+            g.drawLine(this.getWidth()/2, 0, this.getWidth()/2, points[2].y);
+            g.drawLine(points[2].x, points[2].y, points[2].x, points[3].y);
+            g.drawLine(this.getWidth()/2, points[3].y, this.getWidth()/2, this.getHeight());
             g.drawImage(new ImageIcon("untitled//src//GoblinMain.jpg").getImage(), this.getWidth()-200, this.getHeight()-200, 200, 200, this);
             g.drawImage(new ImageIcon("untitled//src//fireball1.jpg").getImage(), this.getWidth()-200, this.getHeight()-400, 200, 200, this);
             g.drawImage(new ImageIcon("untitled//src//Archer.png").getImage(), this.getWidth()-200, this.getHeight()-600, 200, 200, this);
             //g.drawImage(new ImageIcon("untitled//src//background.png").getImage(), 0, 0, this.getWidth(), this.getHeight(), this);
-            // Теперь будем ТУТ всё рисовать
-            if (point != null)
-                g.fillOval(point.x - 5, point.y - 5, 9, 9);
-            if (beginPoint != null)
-                g.fillOval(beginPoint.x - 3, beginPoint.y - 3, 5, 5);
-            if (endPoint != null && beginPoint != null)
-                g.drawLine(beginPoint.x, beginPoint.y, endPoint.x, endPoint.y);
-            g.drawString("Число кликов мыши: " + countOfClick, 100, 100);
+
 
                 for (int i = 1; i <=10; i++) {
                     g.setColor(Color.CYAN);
@@ -290,16 +298,18 @@ public class Main extends JFrame {
              */
 
             g.drawRect(cX-this.getWidth()/80, cY-this.getHeight()/40, this.getWidth()/40, this.getHeight()/20);
+            //g.drawOval(cX, cY, 2, 2);
 
 
             for (int i = 6; i < kUnit; i++) {
                 if (units[i]!=null) {
 
                         g.drawImage(new ImageIcon("untitled//src//"+units[i].s+".png").getImage(), units[i].x-units[i].w/2, units[i].y-units[i].h/2, units[i].w, units[i].h, this);
+                        //g.drawOval(units[i].x, units[i].y, 2, 2);
                         if (units[i].hp!=units[i].maxhp&&units[i].hp>0) {
                             g.setColor(Color.RED);
-                            g.fillRect(units[i].x-units[i].w/2, units[i].y - units[i].h / 4*3, units[i].w * units[i].hp / units[i].maxhp, 4);
-                            g.drawRect(units[i].x-units[i].w/2, units[i].y - units[i].h / 4*3, units[i].w, 4);
+                            g.fillRect(units[i].x-units[i].w/2, units[i].y - units[i].h / 3*2, units[i].w * units[i].hp / units[i].maxhp, 4);
+                            g.drawRect(units[i].x-units[i].w/2, units[i].y - units[i].h / 3*2, units[i].w, 4);
                         }
 
                 }
@@ -347,7 +357,6 @@ public class Main extends JFrame {
             }
             if (pressX<this.getWidth()&&pressX>this.getWidth()-200&&pressY<this.getHeight()-200&&pressY>this.getHeight()-400) {
                 mouse=1;
-                System.out.println(dragX);
             }
                 repaint();
         }
@@ -356,7 +365,7 @@ public class Main extends JFrame {
         public void mouseReleased(MouseEvent mouseEvent) {
             xRel = mouseEvent.getX();
             yRel = mouseEvent.getY();
-            if (pressX<this.getWidth()&&pressX>this.getWidth()-200&&pressY<this.getHeight()&&pressY>this.getHeight()-200&&xRel<this.getWidth()-200&&s1>2) {
+            if (((yRel<=points[2].y||yRel>=points[3].y)&&xRel>this.getWidth()/2||xRel>points[2].x+22)&&pressX<this.getWidth()&&pressX>this.getWidth()-200&&pressY<this.getHeight()&&pressY>this.getHeight()-200&&xRel<this.getWidth()-200&&s1>2) {
                 kUnit+=4;
                 if (xRel<this.getWidth()/2+20) {
                     xRel = this.getWidth()/2+20;
@@ -375,7 +384,7 @@ public class Main extends JFrame {
                 s1-=4;
                 spells[kSpell-1] = new Spell(1, 1, xRel, yRel);
             }
-            else if(pressX<this.getWidth()&&pressX>this.getWidth()-200&&pressY<this.getHeight()-400&&pressY>this.getHeight()-600&&xRel<this.getWidth()-200&&s1>5) {
+            else if(((yRel<=40||yRel>=this.getHeight()-60)&&xRel>this.getWidth()/2||xRel>this.getWidth()/2+30)&&pressX<this.getWidth()&&pressX>this.getWidth()-200&&pressY<this.getHeight()-400&&pressY>this.getHeight()-600&&xRel<this.getWidth()-200&&s1>5) {
                 if (xRel<this.getWidth()/2+20) {
                     xRel = this.getWidth()/2+20;
                 }

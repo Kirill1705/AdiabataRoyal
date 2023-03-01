@@ -24,7 +24,7 @@ public class Spell {
         }
     }
     public boolean canAttack(Unit unit) {
-        return (int)Math.sqrt((this.x-unit.x)*(this.x-unit.x)+(this.y-unit.y)*(this.y-unit.y))<this.r;
+        return (int)Math.sqrt((this.x-unit.x)*(this.x-unit.x)+(this.y-unit.y)*(this.y-unit.y))<this.r+Math.max(unit.w/2, unit.h/2);
     }
     public boolean isEnemy(Unit unit) {
         return this.command!=unit.command;
