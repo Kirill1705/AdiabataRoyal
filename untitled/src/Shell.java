@@ -9,6 +9,9 @@ public class Shell {
     public int dd;
     public int command;
     public Unit goal;
+    public  boolean splash;
+    public  int r;
+    public int l;
     public Shell(int type, int command, int x, int y, Unit goal) {
 
         this.type = type;
@@ -22,13 +25,27 @@ public class Shell {
             this.w = 15;
             this.h = 15;
             this.s="";
+            this.splash=false;
         }
         else if (this.type==0) {
             this.dd=100;
             this.speed = 60;
-            this.w=25;
-            this.h=25;
+            this.w=30;
+            this.h=30;
+            this.splash=false;
         }
+        else if (this.type==5) {
+            this.dd=180;
+            this.speed=30;
+            this.w=30;
+            this.h=30;
+            this.splash=true;
+            this.r=50;
+            this.l=1;
+        }
+    }
+    public boolean isEnemy(Unit unit) {
+        return this.command!=unit.command&&(!unit.fly&&this.l!=3||unit.fly&&(this.l==1||this.l==3));
     }
     public boolean shelldr() {
         if (goal==null) {

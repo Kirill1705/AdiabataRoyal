@@ -22,6 +22,13 @@ public class Unit {
     public int cost;
     public  int death;
     public boolean shell;
+    public int l;
+    /* l: Избранная цель.
+    l=0: Земля
+    l=1: Земля и воздух
+    l=2: Королевская башня
+    l=3: Воздух
+     */
     public Unit(int type, int command, int x,int y) {
         this.x=x;
         this.y=y;
@@ -30,6 +37,7 @@ public class Unit {
         this.k1=-1;
         //Гоблины
         if(type==1) {
+            this.l=0;
             this.w=50;
             this.h=70;
             this.hp=200;
@@ -48,6 +56,7 @@ public class Unit {
         }
         //Королевская башня
         else if(type==0) {
+            this.l=1;
             this.w=150;
             this.h=150;
             this.hp=5000;
@@ -64,6 +73,7 @@ public class Unit {
         }
         //Лучник
         else if (type==2) {
+            this.l=1;
             this.w=75;
             this.h=90;
             this.hp=1000;
@@ -82,6 +92,7 @@ public class Unit {
         }
         //Пушка
         else if(type==4) {
+            this.l=0;
             this.w=100;
             this.h=100;
             this.speed=0;
@@ -97,25 +108,28 @@ public class Unit {
             this.dd=0;
             this.building=true;
         }
+        //Летучие мыши
         if (type==5) {
-            this.w=50;
-            this.h=50;
+            this.l=1;
+            this.w=75;
+            this.h=75;
             this.speed=4;
             this.attackSpeed=30;
             this.shell=true;
             this.maxhp=500;
             this.r=60;
             this.fly=true;
-            this.splash=true;
+            this.splash=false;
             this.hp=this.maxhp;
             this.s="5front1";
             this.cost=4;
             this.dd=0;
             this.building=false;
+            this.death=50;
         }
     }
     public boolean isEnemy(Unit unit) {
-        return this.command!=unit.command;
+        return this.command!=unit.command&&(!unit.fly&&this.l!=3||unit.fly&&(this.l==1||this.l==3));
     }
     public int getDistance(Unit unit) {
         return (int)Math.sqrt((this.x-unit.x)*(this.x-unit.x)+(this.y-unit.y)*(this.y-unit.y));
@@ -129,7 +143,7 @@ public class Unit {
         double dry;
         boolean b;
         //System.out.println(min);
-        if (goal.x>points[0].x-10&&this.x>points[0].x-10||goal.x<points[2].x+10&&this.x<points[2].x+10||this.GOAL!=null) {
+        if ((goal.x>points[0].x-10&&this.x>points[0].x-10||goal.x<points[2].x+10&&this.x<points[2].x+10||this.GOAL!=null)||this.fly) {
             if (goal.y - this.y == 0)
                 div = 1000;
             else
@@ -279,7 +293,6 @@ public class Unit {
             this.death--;
             //System.out.println(this.s);
             //System.out.println(this.death);
-            System.out.println(this.hp);
         }
     }
 }

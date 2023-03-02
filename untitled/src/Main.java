@@ -67,6 +67,13 @@ public class Main extends JFrame {
                         System.out.println("+");
                     }
                     if (shells[i]!=null&&!shells[i].shelldr()) {
+                        if (shells[i].splash) {
+                            for (int j = 0; j < kUnit; j++) {
+                                if (units[j]!=null&&units[j]!=shells[i].goal&&shells[i].isEnemy(units[j])&&shells[i].goal.getDistance(units[j])<=shells[i].r) {
+                                    units[j].hp-=shells[i].dd;
+                                }
+                            }
+                        }
                         shells[i]=null;
                     }
                 }
@@ -232,6 +239,7 @@ public class Main extends JFrame {
             g.drawImage(new ImageIcon("untitled//src//GoblinMain.jpg").getImage(), this.getWidth()-200, this.getHeight()-200, 200, 200, this);
             g.drawImage(new ImageIcon("untitled//src//fireball1.jpg").getImage(), this.getWidth()-200, this.getHeight()-400, 200, 200, this);
             g.drawImage(new ImageIcon("untitled//src//Archer.png").getImage(), this.getWidth()-200, this.getHeight()-600, 200, 200, this);
+            g.drawImage(new ImageIcon("untitled//src//5.png").getImage(), this.getWidth()-200, this.getHeight()-800, 200, 200, this);
             //g.drawImage(new ImageIcon("untitled//src//background.png").getImage(), 0, 0, this.getWidth(), this.getHeight(), this);
 
 
@@ -393,8 +401,15 @@ public class Main extends JFrame {
                 s1-=5;
                 units[kUnit-1] = new Unit(2, 1, xRel, yRel);
             }
-            else {
+            else if(((yRel<=40||yRel>=this.getHeight()-60)&&xRel>this.getWidth()/2||xRel>this.getWidth()/2+30)&&pressX<this.getWidth()&&pressX>this.getWidth()-200&&pressY<this.getHeight()-600&&pressY>this.getHeight()-800&&xRel<this.getWidth()-200&&s1>4) {
+                if (xRel<this.getWidth()/2+20) {
+                    xRel = this.getWidth()/2+20;
+                }
                 mouse=0;
+                kUnit+=2;
+                s1-=4;
+                units[kUnit-2] = new Unit(5, 1, xRel, yRel-20);
+                units[kUnit-1] = new Unit(5, 1, xRel, yRel+20);
             }
             repaint();
             xRel=-10;
@@ -447,6 +462,14 @@ public class Main extends JFrame {
                     cX=this.getWidth()/2-40;
                 }
             }
+            if (key==52) {
+                su=0;
+                type=5;
+                r0=this.getWidth()/2;
+                if (cX>this.getWidth()/2-40) {
+                    cX=this.getWidth()/2-40;
+                }
+            }
             if (key==10) {
                 if (type==1&&su==0&&s0>2) {
                     kUnit+=4;
@@ -468,7 +491,12 @@ public class Main extends JFrame {
                     s0-=5;
                     units[kUnit-1] = new Unit(2, 0, cX, cY);
                 }
-
+                else if (type==5&&su==0&&s0>4) {
+                    kUnit+=2;
+                    s0-=4;
+                    units[kUnit-2] = new Unit(5, 0, cX, cY-20);
+                    units[kUnit-1] = new Unit(5, 0, cX, cY+20);
+                }
             }
             if (key==37&&cX>200) {
                 cX-=this.getWidth()/40;
