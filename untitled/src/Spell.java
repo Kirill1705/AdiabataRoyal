@@ -10,17 +10,17 @@ public class Spell {
     public int attackSpeed;
     public  int command;
     public Spell(int type,int command, int x, int y) {
-        if (type==1) {
             this.x=x;
             this.y=y;
             this.command=command;
             this.type=type;
-            this.dd=400;
-            this.r=100;
-            this.t=40;
+        if (type==6) {
+            this.dd = 400;
+            this.r = 100;
+            this.t = 40;
             this.s = "untitled//src//fireball.png";
             this.cost = 4;
-            this.attackSpeed=40;
+            this.attackSpeed = 40;
         }
     }
     public boolean canAttack(Unit unit) {

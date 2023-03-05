@@ -6,10 +6,13 @@ import java.awt.event.*;
 public class Main extends JFrame {
 
     public int countOfClick = 0;
+    public int[] iconsM = new int[8];
+    public  int[] a = new int[8];
 
     public  Point[] points = new Point[4];
     public Shell[] shells = new Shell[1000];
     public int cX = 500;
+    public  int slot;
     public Spell t1 = new Spell(1, 1, 0, 0);
     public int su = 0;
     public  int mouse = 0;
@@ -69,7 +72,7 @@ public class Main extends JFrame {
                     if (shells[i]!=null&&!shells[i].shelldr()) {
                         if (shells[i].splash) {
                             for (int j = 0; j < kUnit; j++) {
-                                if (units[j]!=null&&units[j]!=shells[i].goal&&shells[i].isEnemy(units[j])&&shells[i].goal.getDistance(units[j])<=shells[i].r) {
+                                if (units[j]!=null&&units[j]!=shells[i].goal&&shells[i].isEnemy(units[j])&&shells[i].goal.getDistance(units[j])<=shells[i].r+Math.max(units[j].w, units[j].h)) {
                                     units[j].hp-=shells[i].dd;
                                 }
                             }
@@ -163,6 +166,42 @@ public class Main extends JFrame {
 
     public Main(String title) {
         super(title);
+        boolean f = false;
+        for (int i = 0; i < a.length; i ++) {
+            a[i]=i;
+        }
+        iconsM[0]=(int)((a.length)*Math.random());
+        a[iconsM[0]]=-1;
+        for (int i = 1; i < iconsM.length; i++) {
+            while (!f) {
+                iconsM[i] = (int) ((a.length) * Math.random());
+                for (int j = 0; j < a.length; j++) {
+                    if (iconsM[i]==a[j]) {
+                        f = true;
+                        a[j]=-1;
+                    }
+                }
+            }
+            f=false;
+        }
+        for (int i = 0; i < iconsM.length; i++) {
+            System.out.println(iconsM[i]);
+        }
+        Unit unit;
+        Spell spell;
+        for (int i = 0; i < a.length; i++) {
+            if (iconsM[i]==5) {
+                spell=new Spell(iconsM[i]+1, 1, -500, -500);
+                a[i]=spell.cost;
+            }
+            else {
+                unit = new Unit(iconsM[i] + 1, 1, -500, -500);
+                a[i] = unit.cost;
+            }
+        }
+        unit=null;
+        spell=null;
+        System.out.println("break");
         setBounds(10, 50, 600, 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         JMenuBar menuBar = new JMenuBar();
@@ -232,15 +271,22 @@ public class Main extends JFrame {
             g.drawImage(new ImageIcon("untitled//src//background.png").getImage(), 0, 0, this.getWidth(), this.getHeight(), this);
 
                 g.drawImage(new ImageIcon("untitled//src//river.jpg").getImage(), points[0].x, points[0].y, points[2].x-points[0].x, points[1].y-points[0].y, this);
-
             g.drawLine(this.getWidth()/2, 0, this.getWidth()/2, points[2].y);
             g.drawLine(points[2].x, points[2].y, points[2].x, points[3].y);
             g.drawLine(this.getWidth()/2, points[3].y, this.getWidth()/2, this.getHeight());
-            g.drawImage(new ImageIcon("untitled//src//GoblinMain.jpg").getImage(), this.getWidth()-200, this.getHeight()-200, 200, 200, this);
-            g.drawImage(new ImageIcon("untitled//src//fireball1.jpg").getImage(), this.getWidth()-200, this.getHeight()-400, 200, 200, this);
-            g.drawImage(new ImageIcon("untitled//src//Archer.png").getImage(), this.getWidth()-200, this.getHeight()-600, 200, 200, this);
-            g.drawImage(new ImageIcon("untitled//src//5.png").getImage(), this.getWidth()-200, this.getHeight()-800, 200, 200, this);
+            g.fillRect(this.getWidth()-200, this.getHeight()*3/4, 200, this.getHeight()/4);
+            g.fillRect(this.getWidth()-200, this.getHeight()/2, 200, this.getHeight()/4);
+            g.fillRect(this.getWidth()-200, this.getHeight()/4, 200, this.getHeight()/4);
+            g.fillRect(this.getWidth()-200, 0, 200, this.getHeight()/4);
+            g.drawImage(new ImageIcon("untitled//src//"+(iconsM[0]+1)+".jpg").getImage(), this.getWidth()-190, this.getHeight()*3/4+10, 180, this.getHeight()/4-20, this);
+            g.drawImage(new ImageIcon("untitled//src//"+(iconsM[1]+1)+".jpg").getImage(), this.getWidth()-190, this.getHeight()/2+10, 180, this.getHeight()/4-20, this);
+            g.drawImage(new ImageIcon("untitled//src//"+(iconsM[2]+1)+".jpg").getImage(), this.getWidth()-190, this.getHeight()/4+10, 180, this.getHeight()/4-20, this);
+            g.drawImage(new ImageIcon("untitled//src//"+(iconsM[3]+1)+".jpg").getImage(), this.getWidth()-190, 10, 180, this.getHeight()/4-20, this);
             //g.drawImage(new ImageIcon("untitled//src//background.png").getImage(), 0, 0, this.getWidth(), this.getHeight(), this);
+            g.drawImage(new ImageIcon("untitled//src//n"+a[0]+".jpg").getImage(), this.getWidth()-200, this.getHeight()*3/4, 50, 50, this);
+            g.drawImage(new ImageIcon("untitled//src//n"+a[1]+".jpg").getImage(), this.getWidth()-200, this.getHeight()/2, 50, 50, this);
+            g.drawImage(new ImageIcon("untitled//src//n"+a[2]+".jpg").getImage(), this.getWidth()-200, this.getHeight()/4, 50, 50, this);
+            g.drawImage(new ImageIcon("untitled//src//n"+a[3]+".jpg").getImage(), this.getWidth()-200, 0, 50, 50, this);
 
 
                 for (int i = 1; i <=10; i++) {
@@ -258,8 +304,8 @@ public class Main extends JFrame {
             g.fillRect(1, this.getHeight()-(int)(this.getHeight()*s0/10), 13, (int)(this.getHeight()*s0/10));
             g.fillRect(this.getWidth()-14, this.getHeight()-(int)(this.getHeight()*s1/10), 13, (int)(this.getHeight()*s1/10));
             this.setFont( this.getFont().deriveFont( 20.0f ));
-            g.drawString(Integer.toString((int)(s0)), 16, this.getHeight()-30);
-            g.drawString(Integer.toString((int)(s1)), this.getWidth()-16, this.getHeight()-30);
+            g.drawImage(new ImageIcon("untitled//src//n"+(int)s0+".jpg").getImage(), 10, this.getHeight()-20, 20, 20, this);
+            g.drawImage(new ImageIcon("untitled//src//n"+(int)s1+".jpg").getImage(), this.getWidth()-30 , this.getHeight()-20, 20, 20, this);
             if (units[0]!=null) {
                 units[0].x = this.getWidth() / 5;
                 units[0].y = this.getHeight() / 7;
@@ -373,45 +419,68 @@ public class Main extends JFrame {
         public void mouseReleased(MouseEvent mouseEvent) {
             xRel = mouseEvent.getX();
             yRel = mouseEvent.getY();
-            if (((yRel<=points[2].y||yRel>=points[3].y)&&xRel>this.getWidth()/2||xRel>points[2].x+22)&&pressX<this.getWidth()&&pressX>this.getWidth()-200&&pressY<this.getHeight()&&pressY>this.getHeight()-200&&xRel<this.getWidth()-200&&s1>2) {
-                kUnit+=4;
-                if (xRel<this.getWidth()/2+20) {
-                    xRel = this.getWidth()/2+20;
+            if (pressX<this.getWidth()&&pressX>this.getWidth()-200&&xRel<this.getWidth()-200) {
+                if (pressY<this.getHeight()&&pressY>this.getHeight()*3/4) {
+                    slot=0;
                 }
-                //int c = (int)(2*Math.random());
-                s1-=2;
+                else if(pressY<this.getHeight()*3/4&&pressY>this.getHeight()/2) {
+                    slot=1;
+                }
+                else if(pressY<this.getHeight()/2&&pressY>this.getHeight()/4) {
+                    slot=2;
+                }
+                else if(pressY<this.getHeight()/4&&pressY>0) {
+                    slot=3;
+                }
+                if (iconsM[slot]==5) {
+                    spells[kSpell] = new Spell(iconsM[slot]+1, 1, xRel, yRel);
+                    if (s1<spells[kSpell].cost) {
+                        spells[kSpell]=null;
+                    }
+                    else {
+                        kSpell++;
+                        s1-=spells[kSpell-1].cost;
+                        int g = iconsM[slot];
+                        iconsM[slot]=iconsM[4];
+                        iconsM[4]=iconsM[5];
+                        iconsM[5]=iconsM[6];
+                        iconsM[6]=iconsM[7];
+                        iconsM[7]=g;
+                        g = a[slot];
+                        a[slot]=a[4];
+                        a[4]=a[5];
+                        a[5]=a[6];
+                        a[6]=a[7];
+                        a[7]=g;
+                    }
+                }
+                else {
+                    Unit ex = new Unit(iconsM[slot]+1, 1, xRel, yRel);
+                    if (s1 >= ex.cost&&((yRel<points[2].y||yRel>points[3].y)&&xRel>this.getWidth()/2||xRel>points[2].x+20)) {
+                        s1-=ex.cost;
+                        System.out.println(ex.cost);
+                        for (int i = 0; i < ex.value; i++) {
+                            units[kUnit] = new Unit(iconsM[slot]+1, 1, xRel + ex.upoints[i].x, yRel + ex.upoints[i].y);
+                            kUnit++;
+                        }
+                        int g = iconsM[slot];
+                        iconsM[slot]=iconsM[4];
+                        iconsM[4]=iconsM[5];
+                        iconsM[5]=iconsM[6];
+                        iconsM[6]=iconsM[7];
+                        iconsM[7]=g;
+                        g = a[slot];
+                        a[slot]=a[4];
+                        a[4]=a[5];
+                        a[5]=a[6];
+                        a[6]=a[7];
+                        a[7]=g;
+                    }
+                }
+            }
+            if (((yRel<=points[2].y||yRel>=points[3].y)&&xRel>this.getWidth()/2||xRel>points[2].x+22)&&pressX<this.getWidth()&&pressX>this.getWidth()-200&&pressY<this.getHeight()&&pressY>this.getHeight()-200&&xRel<this.getWidth()-200&&s1>2)
 
-                units[kUnit - 4] = new Unit(1, 1, xRel+20, yRel-20);
-                units[kUnit - 3] = new Unit(1, 1, xRel+20, yRel+20);
-                units[kUnit - 2] = new Unit(1, 1, xRel-20, yRel-20);
-                units[kUnit - 1] = new Unit(1, 1, xRel-20, yRel+20);
-                //System.out.println(kUnit);
-            } else if (pressX<this.getWidth()&&pressX>this.getWidth()-200&&pressY<this.getHeight()-200&&pressY>this.getHeight()-400&&xRel<this.getWidth()-200&&s1>4) {
-                kSpell++;
-                mouse=0;
-                s1-=4;
-                spells[kSpell-1] = new Spell(1, 1, xRel, yRel);
-            }
-            else if(((yRel<=40||yRel>=this.getHeight()-60)&&xRel>this.getWidth()/2||xRel>this.getWidth()/2+30)&&pressX<this.getWidth()&&pressX>this.getWidth()-200&&pressY<this.getHeight()-400&&pressY>this.getHeight()-600&&xRel<this.getWidth()-200&&s1>5) {
-                if (xRel<this.getWidth()/2+20) {
-                    xRel = this.getWidth()/2+20;
-                }
-                mouse=0;
-                kUnit++;
-                s1-=5;
-                units[kUnit-1] = new Unit(2, 1, xRel, yRel);
-            }
-            else if(((yRel<=40||yRel>=this.getHeight()-60)&&xRel>this.getWidth()/2||xRel>this.getWidth()/2+30)&&pressX<this.getWidth()&&pressX>this.getWidth()-200&&pressY<this.getHeight()-600&&pressY>this.getHeight()-800&&xRel<this.getWidth()-200&&s1>4) {
-                if (xRel<this.getWidth()/2+20) {
-                    xRel = this.getWidth()/2+20;
-                }
-                mouse=0;
-                kUnit+=2;
-                s1-=4;
-                units[kUnit-2] = new Unit(5, 1, xRel, yRel-20);
-                units[kUnit-1] = new Unit(5, 1, xRel, yRel+20);
-            }
-            repaint();
+                repaint();
             xRel=-10;
             yRel=-10;
             r1=0;

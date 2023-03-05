@@ -1,7 +1,9 @@
 import java.awt.*;
 
 public class Unit {
+    public Point[] upoints = new Point[20];
     public String s;
+    public int value;
     public Unit GOAL;
     public boolean building;
     public int x;
@@ -53,6 +55,11 @@ public class Unit {
             this.death=100;
             this.shell=false;
             this.building=false;
+            this.value=4;
+            this.upoints[0]=new Point(-20, -20);
+            this.upoints[1]=new Point(-20, 20);
+            this.upoints[2]=new Point(20, -20);
+            this.upoints[3]=new Point(20, 20);
         }
         //Королевская башня
         else if(type==0) {
@@ -62,7 +69,7 @@ public class Unit {
             this.hp=5000;
             this.maxhp=5000;
             this.dd=0;
-            this.speed=0;
+            this.speed=1;
             this.attackSpeed=30;
             this.r=325;
             this.fly=false;
@@ -89,13 +96,15 @@ public class Unit {
             this.shell=true;
             this.building=false;
             this.death=100;
+            this.value=1;
+            this.upoints[0]=new Point(0, 0);
         }
         //Пушка
-        else if(type==4) {
+        /*else if(type==4) {
             this.l=0;
             this.w=100;
             this.h=100;
-            this.speed=0;
+            this.speed=1;
             this.attackSpeed=30;
             this.shell=true;
             this.maxhp=500;
@@ -107,9 +116,11 @@ public class Unit {
             this.cost=3;
             this.dd=0;
             this.building=true;
-        }
+            this.value=1;
+            this.upoints[0]=new Point(0, 0);
+        }*/
         //Летучие мыши
-        if (type==5) {
+        else if (type==5) {
             this.l=1;
             this.w=75;
             this.h=75;
@@ -126,6 +137,12 @@ public class Unit {
             this.dd=0;
             this.building=false;
             this.death=50;
+            this.value=2;
+            this.upoints[0]=new Point(0, -20);
+            this.upoints[1]=new Point(0, 20);
+        }
+        else {
+            this.cost=0;
         }
     }
     public boolean isEnemy(Unit unit) {
@@ -160,8 +177,10 @@ public class Unit {
                 dry = -dry;
             }
             if (this.r + this.w / 3 + goal.w / 3 < min) {
-                this.y += dry;
-                this.x += drx;
+                if (!this.building) {
+                    this.y += dry;
+                    this.x += drx;
+                }
                 this.GOAL=null;
                 b=true;
             }
@@ -195,8 +214,10 @@ public class Unit {
                 dry = -dry;
             }
             if (this.r + this.w / 3 + goal.w / 3 < min) {
-                this.y += dry;
-                this.x += drx;
+                if (!this.building) {
+                    this.y += dry;
+                    this.x += drx;
+                }
                 this.GOAL=null;
                 b=true;
             }
