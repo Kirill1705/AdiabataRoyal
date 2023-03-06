@@ -6,8 +6,8 @@ import java.awt.event.*;
 public class Main extends JFrame {
 
     public int countOfClick = 0;
-    public int[] iconsM = new int[8];
-    public  int[] a = new int[8];
+    public int[] iconsM = new int[16];
+    public  int[] a = new int[16];
 
     public  Point[] points = new Point[4];
     public Shell[] shells = new Shell[1000];
@@ -18,7 +18,6 @@ public class Main extends JFrame {
     public  int mouse = 0;
     public int cY = 400;
     public int r1 = 0;
-    public int type = -1;
     public int r0 = 0;
     public double s1 = 5;
     public double s0 = 5;
@@ -167,15 +166,35 @@ public class Main extends JFrame {
     public Main(String title) {
         super(title);
         boolean f = false;
-        for (int i = 0; i < a.length; i ++) {
+        for (int i = 0; i < a.length/2; i ++) {
             a[i]=i;
         }
-        iconsM[0]=(int)((a.length)*Math.random());
-        a[iconsM[0]]=-1;
-        for (int i = 1; i < iconsM.length; i++) {
+        for (int i = a.length/2; i < a.length; i++) {
+            a[i]=i-a.length/2;
+        }
+        //iconsM[0]=(int)((a.length/2)*Math.random());
+        //a[iconsM[0]]=-1;
+        //iconsM[iconsM.length/2]=(int)((a.length/2)*Math.random());
+        //a[iconsM[iconsM.length/2]]=-1;
+        for (int i = 0; i < iconsM.length/2; i++) {
             while (!f) {
-                iconsM[i] = (int) ((a.length) * Math.random());
-                for (int j = 0; j < a.length; j++) {
+                iconsM[i] = (int) ((a.length/2) * Math.random());
+                //System.out.println(iconsM[i]);
+                for (int j = 0; j < iconsM.length/2; j++) {
+                    if (iconsM[i]==a[j]) {
+                        f = true;
+                        a[j]=-1;
+                    }
+                }
+            }
+            //System.out.println("iconsM[i]= "+iconsM[i]);
+            f=false;
+        }
+        for (int i = iconsM.length/2; i < iconsM.length; i++) {
+            while (!f) {
+                iconsM[i] = (int) ((a.length/2) * Math.random());
+                //System.out.println(iconsM[i]);
+                for (int j = iconsM.length/2; j < iconsM.length; j++) {
                     if (iconsM[i]==a[j]) {
                         f = true;
                         a[j]=-1;
@@ -189,7 +208,7 @@ public class Main extends JFrame {
         }
         Unit unit;
         Spell spell;
-        for (int i = 0; i < a.length; i++) {
+        for (int i = 0; i < iconsM.length; i++) {
             if (iconsM[i]==5) {
                 spell=new Spell(iconsM[i]+1, 1, -500, -500);
                 a[i]=spell.cost;
@@ -458,7 +477,6 @@ public class Main extends JFrame {
                     Unit ex = new Unit(iconsM[slot]+1, 1, xRel, yRel);
                     if (s1 >= ex.cost&&((yRel<points[2].y||yRel>points[3].y)&&xRel>this.getWidth()/2||xRel>points[2].x+20)) {
                         s1-=ex.cost;
-                        System.out.println(ex.cost);
                         for (int i = 0; i < ex.value; i++) {
                             units[kUnit] = new Unit(iconsM[slot]+1, 1, xRel + ex.upoints[i].x, yRel + ex.upoints[i].y);
                             kUnit++;
@@ -511,60 +529,37 @@ public class Main extends JFrame {
             int key = keyEvent.getKeyCode();
             System.out.println(key);
             if (key==49) {
-                su=0;
-                type = 1;
+                slot=0;
                 r0=this.getWidth()/2;
                 if (cX>this.getWidth()/2-40) {
                     cX=this.getWidth()/2-40;
                 }
             }
             if (key==50) {
-                su=1;
-                type = 1;
+                slot=1;
                 r0 = this.getWidth()-200;
             }
             if (key==51) {
-                su=0;
-                type=2;
+                slot=2;
                 r0=this.getWidth()/2;
                 if (cX>this.getWidth()/2-40) {
                     cX=this.getWidth()/2-40;
                 }
             }
             if (key==52) {
-                su=0;
-                type=5;
+                slot=3;
                 r0=this.getWidth()/2;
                 if (cX>this.getWidth()/2-40) {
                     cX=this.getWidth()/2-40;
                 }
             }
             if (key==10) {
-                if (type==1&&su==0&&s0>2) {
-                    kUnit+=4;
-                    s0-=2;
+                if (iconsM[slot]==5) {
 
-                    units[kUnit - 4] = new Unit(1, 0, cX+20, cY-20);
-                    units[kUnit - 3] = new Unit(1, 0, cX+20, cY+20);
-                    units[kUnit - 2] = new Unit(1, 0, cX-20, cY-20);
-                    units[kUnit - 1] = new Unit(1, 0, cX-20, cY+20);
                 }
-                else if (type==1&&su==1&&s0>4) {
-                    kSpell++;
+                else {
+                    Unit ex = new Unit(iconsM[slot] + 1, 0, cX, cY);
 
-                    spells[kSpell-1] = new Spell(1, 0, cX, cY);
-                    s0-=spells[kSpell-1].cost;
-                }
-                else if(type==2&&su==0&&s0>5) {
-                    kUnit++;
-                    s0-=5;
-                    units[kUnit-1] = new Unit(2, 0, cX, cY);
-                }
-                else if (type==5&&su==0&&s0>4) {
-                    kUnit+=2;
-                    s0-=4;
-                    units[kUnit-2] = new Unit(5, 0, cX, cY-20);
-                    units[kUnit-1] = new Unit(5, 0, cX, cY+20);
                 }
             }
             if (key==37&&cX>200) {
