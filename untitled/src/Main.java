@@ -12,8 +12,11 @@ public class Main extends JFrame {
     public  Point[] points = new Point[4];
     public Shell[] shells = new Shell[1000];
     public int cX = 500;
-    public  int slot;
+    public  int slotM;
+    public  int slotC;
     public Spell t1 = new Spell(1, 1, 0, 0);
+    public  int end = 0;
+    public  int over = 0;
     public int su = 0;
     public  int mouse = 0;
     public int cY = 400;
@@ -42,6 +45,7 @@ public class Main extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 k++;
+
                 points[0].x=panel.getWidth()/2-30;
                 points[0].y=70;
                 points[1].x=panel.getWidth()/2-30;
@@ -50,8 +54,28 @@ public class Main extends JFrame {
                 points[2].y=70;
                 points[3].x=panel.getWidth()/2+30;
                 points[3].y=panel.getHeight()-80;
-
-                if(k<6000) {
+                if (k>7500) {
+                    for (int i = 0; i < 6; i++) {
+                        if (units[i]!=null) {
+                            units[i].hp-=10;
+                        }
+                    }
+                }
+                if (k==7500||end==1||over!=0) {
+                    for (int i = 6; i < kUnit; i++) {
+                        units[i]=null;
+                    }
+                    for (int i = 0; i < kSpell; i++) {
+                        spells[i]=null;
+                    }
+                    for (int i = 0; i < kShell; i++) {
+                        shells[i]=null;
+                    }
+                }
+                if (end>0) {
+                    end++;
+                }
+                if(k<3000) {
                     if (s0<10)
                         s0 += 0.01;
                     if (s1<10)
@@ -287,28 +311,36 @@ public class Main extends JFrame {
         @Override
         public void paint(Graphics g) {
             super.paint(g);
-            g.drawImage(new ImageIcon("untitled//src//background.png").getImage(), 0, 0, this.getWidth(), this.getHeight(), this);
+            g.setColor(Color.BLACK);
+
+                g.drawImage(new ImageIcon("untitled//src//background.png").getImage(), 0, 0, this.getWidth(), this.getHeight(), this);
 
                 g.drawImage(new ImageIcon("untitled//src//river.jpg").getImage(), points[0].x, points[0].y, points[2].x-points[0].x, points[1].y-points[0].y, this);
             g.drawLine(this.getWidth()/2, 0, this.getWidth()/2, points[2].y);
             g.drawLine(points[2].x, points[2].y, points[2].x, points[3].y);
             g.drawLine(this.getWidth()/2, points[3].y, this.getWidth()/2, this.getHeight());
-            g.fillRect(this.getWidth()-200, this.getHeight()*3/4, 200, this.getHeight()/4);
-            g.fillRect(this.getWidth()-200, this.getHeight()/2, 200, this.getHeight()/4);
-            g.fillRect(this.getWidth()-200, this.getHeight()/4, 200, this.getHeight()/4);
-            g.fillRect(this.getWidth()-200, 0, 200, this.getHeight()/4);
+            g.fillRect(this.getWidth()-200, 0, 200, this.getHeight());
+            g.fillRect(0, 0, 200, this.getHeight());
             g.drawImage(new ImageIcon("untitled//src//"+(iconsM[0]+1)+".jpg").getImage(), this.getWidth()-190, this.getHeight()*3/4+10, 180, this.getHeight()/4-20, this);
             g.drawImage(new ImageIcon("untitled//src//"+(iconsM[1]+1)+".jpg").getImage(), this.getWidth()-190, this.getHeight()/2+10, 180, this.getHeight()/4-20, this);
             g.drawImage(new ImageIcon("untitled//src//"+(iconsM[2]+1)+".jpg").getImage(), this.getWidth()-190, this.getHeight()/4+10, 180, this.getHeight()/4-20, this);
             g.drawImage(new ImageIcon("untitled//src//"+(iconsM[3]+1)+".jpg").getImage(), this.getWidth()-190, 10, 180, this.getHeight()/4-20, this);
+            g.drawImage(new ImageIcon("untitled//src//"+(iconsM[8]+1)+".jpg").getImage(), 10, this.getHeight()*3/4+10, 180, this.getHeight()/4-20, this);
+            g.drawImage(new ImageIcon("untitled//src//"+(iconsM[9]+1)+".jpg").getImage(), 10, this.getHeight()/2+10, 180, this.getHeight()/4-20, this);
+            g.drawImage(new ImageIcon("untitled//src//"+(iconsM[10]+1)+".jpg").getImage(), 10, this.getHeight()/4+10, 180, this.getHeight()/4-20, this);
+            g.drawImage(new ImageIcon("untitled//src//"+(iconsM[11]+1)+".jpg").getImage(), 10, 10, 180, this.getHeight()/4-20, this);
             //g.drawImage(new ImageIcon("untitled//src//background.png").getImage(), 0, 0, this.getWidth(), this.getHeight(), this);
             g.drawImage(new ImageIcon("untitled//src//n"+a[0]+".jpg").getImage(), this.getWidth()-200, this.getHeight()*3/4, 50, 50, this);
             g.drawImage(new ImageIcon("untitled//src//n"+a[1]+".jpg").getImage(), this.getWidth()-200, this.getHeight()/2, 50, 50, this);
             g.drawImage(new ImageIcon("untitled//src//n"+a[2]+".jpg").getImage(), this.getWidth()-200, this.getHeight()/4, 50, 50, this);
             g.drawImage(new ImageIcon("untitled//src//n"+a[3]+".jpg").getImage(), this.getWidth()-200, 0, 50, 50, this);
+            g.drawImage(new ImageIcon("untitled//src//n"+a[8]+".jpg").getImage(), 150, this.getHeight()*3/4, 50, 50, this);
+            g.drawImage(new ImageIcon("untitled//src//n"+a[9]+".jpg").getImage(), 150, this.getHeight()/2, 50, 50, this);
+            g.drawImage(new ImageIcon("untitled//src//n"+a[10]+".jpg").getImage(), 150, this.getHeight()/4, 50, 50, this);
+            g.drawImage(new ImageIcon("untitled//src//n"+a[11]+".jpg").getImage(), 150, 0, 50, 50, this);
 
 
-                for (int i = 1; i <=10; i++) {
+            for (int i = 1; i <=10; i++) {
                     g.setColor(Color.CYAN);
                     g.drawRect(0, this.getHeight() * i / 10, 15, this.getHeight() / 10);
                     g.drawRect(this.getWidth() - 15, this.getHeight() * i / 10, 15, this.getHeight() / 10);
@@ -403,7 +435,42 @@ public class Main extends JFrame {
                     g.drawImage(new ImageIcon("untitled//src//"+shells[i].s+".png").getImage(), shells[i].x-shells[i].w/2, shells[i].y-shells[i].h/2, shells[i].w, shells[i].h, this);
                 }
             }
-
+            int c1=0;
+            int c0=0;
+            if (units[0]!=null)
+                c0++;
+            if (units[1]!=null)
+                c0++;
+            if (units[2]!=null)
+                c1++;
+            if (units[3]!=null)
+                c1++;
+            if (k>10) {
+                if (c1 > c0 && k > 4500 || over == 1 || c0 == 0) {
+                    g.drawImage(new ImageIcon("untitled//src//victory.png").getImage(), this.getWidth() / 2, 0, this.getWidth() / 2, this.getHeight(), this);
+                    g.setColor(Color.RED);
+                    g.fillRect(0, 0, this.getWidth() / 2, this.getHeight());
+                    g.drawImage(new ImageIcon("untitled//src//defeat.png").getImage(), 100, 200, this.getWidth() / 2 - 100, this.getHeight() - 400, this);
+                    if (end==0)
+                        end = 1;
+                    over = 1;
+                    System.out.println(end);
+                    if (end > 150)
+                        System.exit(0);
+                } else if (c1 < c0 && over == 0 && k > 4500 || over == 2 || c1 == 0) {
+                    g.drawImage(new ImageIcon("untitled//src//victory.png").getImage(), 0, 0, this.getWidth() / 2, this.getHeight(), this);
+                    g.setColor(Color.RED);
+                    g.fillRect(this.getWidth() / 2, 0, this.getWidth() / 2, this.getHeight());
+                    g.drawImage(new ImageIcon("untitled//src//defeat.png").getImage(), this.getWidth() / 2 + 100, 200, this.getWidth()/2 - 100, this.getHeight() - 400, this);
+                    if (end==0)
+                        end = 1;
+                    over = 2;
+                    if (end > 150) {
+                        System.exit(0);
+                    }
+                }
+            }
+            g.drawString(Integer.toString(k/25), this.getWidth()/2-5, 40);
         }
 
 
@@ -440,33 +507,33 @@ public class Main extends JFrame {
             yRel = mouseEvent.getY();
             if (pressX<this.getWidth()&&pressX>this.getWidth()-200&&xRel<this.getWidth()-200) {
                 if (pressY<this.getHeight()&&pressY>this.getHeight()*3/4) {
-                    slot=0;
+                    slotM=0;
                 }
                 else if(pressY<this.getHeight()*3/4&&pressY>this.getHeight()/2) {
-                    slot=1;
+                    slotM=1;
                 }
                 else if(pressY<this.getHeight()/2&&pressY>this.getHeight()/4) {
-                    slot=2;
+                    slotM=2;
                 }
                 else if(pressY<this.getHeight()/4&&pressY>0) {
-                    slot=3;
+                    slotM=3;
                 }
-                if (iconsM[slot]==5) {
-                    spells[kSpell] = new Spell(iconsM[slot]+1, 1, xRel, yRel);
+                if (iconsM[slotM]==5) {
+                    spells[kSpell] = new Spell(iconsM[slotM]+1, 1, xRel, yRel);
                     if (s1<spells[kSpell].cost) {
                         spells[kSpell]=null;
                     }
                     else {
                         kSpell++;
                         s1-=spells[kSpell-1].cost;
-                        int g = iconsM[slot];
-                        iconsM[slot]=iconsM[4];
+                        int g = iconsM[slotM];
+                        iconsM[slotM]=iconsM[4];
                         iconsM[4]=iconsM[5];
                         iconsM[5]=iconsM[6];
                         iconsM[6]=iconsM[7];
                         iconsM[7]=g;
-                        g = a[slot];
-                        a[slot]=a[4];
+                        g = a[slotM];
+                        a[slotM]=a[4];
                         a[4]=a[5];
                         a[5]=a[6];
                         a[6]=a[7];
@@ -474,30 +541,35 @@ public class Main extends JFrame {
                     }
                 }
                 else {
-                    Unit ex = new Unit(iconsM[slot]+1, 1, xRel, yRel);
+                    Unit ex = new Unit(iconsM[slotM]+1, 1, xRel, yRel);
                     if (s1 >= ex.cost&&((yRel<points[2].y||yRel>points[3].y)&&xRel>this.getWidth()/2||xRel>points[2].x+20)) {
                         s1-=ex.cost;
                         for (int i = 0; i < ex.value; i++) {
-                            units[kUnit] = new Unit(iconsM[slot]+1, 1, xRel + ex.upoints[i].x, yRel + ex.upoints[i].y);
+                            units[kUnit] = new Unit(iconsM[slotM]+1, 1, xRel + ex.upoints[i].x, yRel + ex.upoints[i].y);
                             kUnit++;
                         }
-                        int g = iconsM[slot];
-                        iconsM[slot]=iconsM[4];
+                        int g = iconsM[slotM];
+                        iconsM[slotM]=iconsM[4];
                         iconsM[4]=iconsM[5];
                         iconsM[5]=iconsM[6];
                         iconsM[6]=iconsM[7];
                         iconsM[7]=g;
-                        g = a[slot];
-                        a[slot]=a[4];
+                        g = a[slotM];
+                        a[slotM]=a[4];
                         a[4]=a[5];
                         a[5]=a[6];
                         a[6]=a[7];
                         a[7]=g;
                     }
                 }
+                for (int i = 0; i <iconsM.length; i++) {
+                    System.out.println(iconsM[i]);
+                    if (i==7) {
+                        System.out.println("second");
+                    }
+                }
+                System.out.println("break");
             }
-            if (((yRel<=points[2].y||yRel>=points[3].y)&&xRel>this.getWidth()/2||xRel>points[2].x+22)&&pressX<this.getWidth()&&pressX>this.getWidth()-200&&pressY<this.getHeight()&&pressY>this.getHeight()-200&&xRel<this.getWidth()-200&&s1>2)
-
                 repaint();
             xRel=-10;
             yRel=-10;
@@ -529,37 +601,69 @@ public class Main extends JFrame {
             int key = keyEvent.getKeyCode();
             System.out.println(key);
             if (key==49) {
-                slot=0;
+                slotC=8;
                 r0=this.getWidth()/2;
-                if (cX>this.getWidth()/2-40) {
-                    cX=this.getWidth()/2-40;
-                }
             }
             if (key==50) {
-                slot=1;
+                slotC=9;
                 r0 = this.getWidth()-200;
             }
             if (key==51) {
-                slot=2;
+                slotC=10;
                 r0=this.getWidth()/2;
-                if (cX>this.getWidth()/2-40) {
-                    cX=this.getWidth()/2-40;
-                }
+
             }
             if (key==52) {
-                slot=3;
+                slotC=11;
                 r0=this.getWidth()/2;
-                if (cX>this.getWidth()/2-40) {
-                    cX=this.getWidth()/2-40;
-                }
             }
             if (key==10) {
-                if (iconsM[slot]==5) {
-
+                if (iconsM[slotC]==5) {
+                    spells[kSpell] = new Spell(iconsM[slotC]+1, 0, cX, cY);
+                    if (s0<4) {
+                        spells[kSpell]=null;
+                    }
+                    else {
+                        kSpell++;
+                        s0-=spells[kSpell-1].cost;
+                        int g = iconsM[slotC];
+                        iconsM[slotC]=iconsM[12];
+                        iconsM[12]=iconsM[13];
+                        iconsM[13]=iconsM[14];
+                        iconsM[14]=iconsM[15];
+                        iconsM[15]=g;
+                        g = a[slotC];
+                        a[slotC]=a[12];
+                        a[12]=a[13];
+                        a[13]=a[14];
+                        a[14]=a[15];
+                        a[15]=g;
+                    }
                 }
                 else {
-                    Unit ex = new Unit(iconsM[slot] + 1, 0, cX, cY);
-
+                    if (cX>this.getWidth()/2-40) {
+                        cX=this.getWidth()/2-40;
+                    }
+                    Unit ex = new Unit(iconsM[slotC]+1, 1, xRel, yRel);
+                    if (s0 >= ex.cost) {
+                        s0-=ex.cost;
+                        for (int i = 0; i < ex.value; i++) {
+                            units[kUnit] = new Unit(iconsM[slotC]+1, 0, cX + ex.upoints[i].x, cY + ex.upoints[i].y);
+                            kUnit++;
+                        }
+                        int g = iconsM[slotC];
+                        iconsM[slotC]=iconsM[12];
+                        iconsM[12]=iconsM[13];
+                        iconsM[13]=iconsM[14];
+                        iconsM[14]=iconsM[15];
+                        iconsM[15]=g;
+                        g = a[slotC];
+                        a[slotC]=a[12];
+                        a[12]=a[13];
+                        a[13]=a[14];
+                        a[14]=a[15];
+                        a[15]=g;
+                    }
                 }
             }
             if (key==37&&cX>200) {
