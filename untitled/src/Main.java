@@ -136,7 +136,7 @@ public class Main extends JFrame {
                                 if ((k + units[i].k1) % units[i].attackSpeed == 0) {
                                     units[i].GOAL.hp -= units[i].dd;
                                     if (units[i].shell) {
-                                        shells[kShell] = new Shell(units[i].type, units[i].command, units[i].x, units[i].y, units[i].GOAL);
+                                        shells[kShell] = new Shell(units[i].type, units[i].command, (int)units[i].x, (int)units[i].y, units[i].GOAL);
                                         kShell++;
                                     }
                                 }
@@ -377,15 +377,15 @@ public class Main extends JFrame {
                 for (int i = 0; i <= 5; i++) {
                     if (units[i]!=null) {
                         g.setColor(Color.RED);
-                        g.fillRect(units[i].x-units[i].w/2, units[i].y-units[i].h/4*3+20, 150*units[i].hp/5000, 10);
-                        g.drawString(Integer.toString(units[i].hp), units[i].x-units[i].w/2, units[i].y-units[i].h/4*3+19 );
-                        g.drawRect(units[i].x-units[i].w/2, units[i].y-units[i].h/4*3+20, 150, 10);
+                        g.fillRect((int)(units[i].x-units[i].w/2), (int)(units[i].y-units[i].h/4*3+20), 150*units[i].hp/5000, 10);
+                        g.drawString(Integer.toString(units[i].hp), (int)(units[i].x-units[i].w/2), (int)(units[i].y-units[i].h/4*3+19 ));
+                        g.drawRect((int)(units[i].x-units[i].w/2), (int)(units[i].y-units[i].h/4*3+20), 150, 10);
                         //System.out.println(units[i].hp);
 
                         if (i==0||i==1)
-                            g.drawImage(new ImageIcon("untitled//src//town.png").getImage(), units[i].x - units[i].w/2, units[i].y - units[i].h/2, units[i].w, units[i].h, this);
+                            g.drawImage(new ImageIcon("untitled//src//town.png").getImage(), (int)(units[i].x - units[i].w/2), (int)(units[i].y - units[i].h/2), units[i].w, units[i].h, this);
                         if (i==2||i==3)
-                            g.drawImage(new ImageIcon("untitled//src//town1.png").getImage(), units[i].x-units[i].w/2, units[i].y - units[i].h/2, units[i].w, units[i].h, this);
+                            g.drawImage(new ImageIcon("untitled//src//town1.png").getImage(), (int)(units[i].x-units[i].w/2), (int)(units[i].y - units[i].h/2), units[i].w, units[i].h, this);
                         //g.drawOval(units[i].x-units[i].r, units[i].y-units[i].r, 2*units[i].r, 2*units[i].r);
                     }
 
@@ -409,12 +409,12 @@ public class Main extends JFrame {
             for (int i = 6; i < kUnit; i++) {
                 if (units[i]!=null) {
 
-                        g.drawImage(new ImageIcon("untitled//src//"+units[i].s+".png").getImage(), units[i].x-units[i].w/2, units[i].y-units[i].h/2, units[i].w, units[i].h, this);
+                        g.drawImage(new ImageIcon("untitled//src//"+units[i].s+".png").getImage(), (int)(units[i].x-units[i].w/2), (int)(units[i].y-units[i].h/2), units[i].w, units[i].h, this);
                         //g.drawOval(units[i].x, units[i].y, 2, 2);
                         if (units[i].hp!=units[i].maxhp&&units[i].hp>0) {
                             g.setColor(Color.RED);
-                            g.fillRect(units[i].x-units[i].w/2, units[i].y - units[i].h / 3*2, units[i].w * units[i].hp / units[i].maxhp, 4);
-                            g.drawRect(units[i].x-units[i].w/2, units[i].y - units[i].h / 3*2, units[i].w, 4);
+                            g.fillRect((int)(units[i].x-units[i].w/2), (int)(units[i].y - units[i].h / 3*2), units[i].w * units[i].hp / units[i].maxhp, 4);
+                            g.drawRect((int)(units[i].x-units[i].w/2), (int)(units[i].y - units[i].h / 3*2), units[i].w, 4);
                         }
 
                 }
@@ -470,7 +470,20 @@ public class Main extends JFrame {
                     }
                 }
             }
-            g.drawString(Integer.toString(k/25), this.getWidth()/2-5, 40);
+            if (k<4500) {
+                g.setColor(Color.WHITE);
+                g.fillRect(this.getWidth()/2-20, this.getHeight()/2-10, 45, 20);
+                g.setColor(Color.RED);
+                g.drawString(2-k/1500+": "+(59-(k%1500)/25), this.getWidth() / 2-20, this.getHeight() / 2+5);
+            }
+
+            if (k>=4500&&k<=7500) {
+                g.setColor(Color.BLACK);
+                g.fillRect(this.getWidth()/2-60, this.getHeight()/2-35, 120, 40);
+                g.setColor(Color.RED);
+                g.drawString("Доп. время", this.getWidth()/2-50, this.getHeight()/2-20);
+                g.drawString((1-(k-4500)/1500)+": "+(59-(k%1500)/25), this.getWidth()/2-30, this.getHeight()/2);
+            }
         }
 
 
@@ -518,6 +531,14 @@ public class Main extends JFrame {
                 else if(pressY<this.getHeight()/4&&pressY>0) {
                     slotM=3;
                 }
+                if (xRel<this.getWidth()/2&&iconsM[slotM]!=5) {
+                    if ((yRel<points[0].y||yRel>points[3].y)) {
+                        xRel=this.getWidth()/2;
+                    }
+                    else {
+                        xRel=points[2].x+30;
+                    }
+                }
                 if (iconsM[slotM]==5) {
                     spells[kSpell] = new Spell(iconsM[slotM]+1, 1, xRel, yRel);
                     if (s1<spells[kSpell].cost) {
@@ -562,13 +583,6 @@ public class Main extends JFrame {
                         a[7]=g;
                     }
                 }
-                for (int i = 0; i <iconsM.length; i++) {
-                    System.out.println(iconsM[i]);
-                    if (i==7) {
-                        System.out.println("second");
-                    }
-                }
-                System.out.println("break");
             }
                 repaint();
             xRel=-10;
@@ -673,7 +687,7 @@ public class Main extends JFrame {
                 cY-=this.getHeight()/20;
 
             }
-            if (key==39&&(cX<this.getWidth()/2-40||su==1&&cX<this.getWidth()-200)) {
+            if (key==39&&cX<this.getWidth()) {
                 cX+=this.getWidth()/40;
             }
             if (key==40&&cY<this.getHeight()-this.getHeight()/20) {

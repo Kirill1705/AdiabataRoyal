@@ -6,8 +6,8 @@ public class Unit {
     public int value;
     public Unit GOAL;
     public boolean building;
-    public int x;
-    public int y;
+    public double x;
+    public double y;
     public int w;
     public int h;
     public int hp;
