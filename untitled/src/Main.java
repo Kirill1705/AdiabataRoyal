@@ -413,10 +413,9 @@ public class Main extends JFrame {
                         //g.drawOval(units[i].x, units[i].y, 2, 2);
                         if (units[i].hp!=units[i].maxhp&&units[i].hp>0) {
                             g.setColor(Color.RED);
-                            g.fillRect((int)(units[i].x-units[i].w/2), (int)(units[i].y - units[i].h / 3*2), units[i].w * units[i].hp / units[i].maxhp, 4);
-                            g.drawRect((int)(units[i].x-units[i].w/2), (int)(units[i].y - units[i].h / 3*2), units[i].w, 4);
+                            g.fillRect((int)(units[i].x-units[i].nw/2), (int)(units[i].y - units[i].nh / 3*2), units[i].nw * units[i].hp / units[i].maxhp, 4);
+                            g.drawRect((int)(units[i].x-units[i].nw/2), (int)(units[i].y - units[i].nh / 3*2), units[i].nw, 4);
                         }
-
                 }
             }
             for (int i = 0; i < kSpell; i++) {
@@ -470,19 +469,21 @@ public class Main extends JFrame {
                     }
                 }
             }
-            if (k<4500) {
-                g.setColor(Color.WHITE);
-                g.fillRect(this.getWidth()/2-20, this.getHeight()/2-10, 45, 20);
-                g.setColor(Color.RED);
-                g.drawString(2-k/1500+": "+(59-(k%1500)/25), this.getWidth() / 2-20, this.getHeight() / 2+5);
-            }
+            if (over==0) {
+                if (k < 4500) {
+                    g.setColor(Color.WHITE);
+                    g.fillRect(this.getWidth() / 2 - 20, this.getHeight() / 2 - 10, 45, 20);
+                    g.setColor(Color.RED);
+                    g.drawString(2 - k / 1500 + ": " + (59 - (k % 1500) / 25), this.getWidth() / 2 - 20, this.getHeight() / 2 + 5);
+                }
 
-            if (k>=4500&&k<=7500) {
-                g.setColor(Color.BLACK);
-                g.fillRect(this.getWidth()/2-60, this.getHeight()/2-35, 120, 40);
-                g.setColor(Color.RED);
-                g.drawString("Доп. время", this.getWidth()/2-50, this.getHeight()/2-20);
-                g.drawString((1-(k-4500)/1500)+": "+(59-(k%1500)/25), this.getWidth()/2-30, this.getHeight()/2);
+                if (k >= 4500 && k <= 7500) {
+                    g.setColor(Color.BLACK);
+                    g.fillRect(this.getWidth() / 2 - 60, this.getHeight() / 2 - 35, 120, 40);
+                    g.setColor(Color.RED);
+                    g.drawString("Доп. время", this.getWidth() / 2 - 50, this.getHeight() / 2 - 20);
+                    g.drawString((1 - (k - 4500) / 1500) + ": " + (59 - (k % 1500) / 25), this.getWidth() / 2 - 30, this.getHeight() / 2);
+                }
             }
         }
 

@@ -9,11 +9,15 @@ public class Unit {
     public double x;
     public double y;
     public int w;
+    public int aw;
+    public  int nw;
     public int h;
+    public  int nh;
+    public  int ah;
     public int hp;
     public int maxhp;
     public int dd;
-    public int speed;
+    public double speed;
     public int attackSpeed;
     public int r;
     public int type;
@@ -41,10 +45,14 @@ public class Unit {
         if(type==1) {
             this.l=0;
             this.w=50;
+            this.aw=60;
+            this.nw=50;
             this.h=70;
+            this.ah=80;
+            this.nh=70;
             this.hp=200;
             this.maxhp=200;
-            this.dd=46;
+            this.dd=66;
             this.speed=6;
             this.attackSpeed=25;
             this.r=10;
@@ -65,7 +73,11 @@ public class Unit {
         else if(type==0) {
             this.l=1;
             this.w=150;
+            this.nw=150;
+            this.aw=150;
             this.h=150;
+            this.nh=150;
+            this.ah=150;
             this.hp=5000;
             this.maxhp=5000;
             this.dd=0;
@@ -82,7 +94,11 @@ public class Unit {
         else if (type==2) {
             this.l=1;
             this.w=75;
+            this.nw=75;
+            this.aw=75;
             this.h=90;
+            this.nh=90;
+            this.ah=90;
             this.hp=1000;
             this.maxhp=1000;
             this.dd=0;
@@ -123,7 +139,11 @@ public class Unit {
         else if (type==5) {
             this.l=1;
             this.w=75;
+            this.nw=75;
+            this.aw=75;
             this.h=75;
+            this.ah=75;
+            this.nh=75;
             this.speed=4;
             this.attackSpeed=30;
             this.shell=true;
@@ -140,6 +160,30 @@ public class Unit {
             this.value=2;
             this.upoints[0]=new Point(0, -20);
             this.upoints[1]=new Point(0, 20);
+        }
+        else if(type==7) {
+            this.l=0;
+            this.w=75;
+            this.nw=75;
+            this.aw=150;
+            this.h=110;
+            this.nh=110;
+            this.ah=152;
+            this.hp=8000;
+            this.maxhp=8000;
+            this.dd=1111;
+            this.speed=1.5;
+            this.attackSpeed=60;
+            this.r=20;
+            this.fly=false;
+            this.splash=false;
+            this.cost=8;
+            this.s="6front1";
+            this.shell=false;
+            this.building=false;
+            this.death=100;
+            this.value=1;
+            this.upoints[0]=new Point(0, 0);
         }
         else {
             this.cost=0;
@@ -180,6 +224,8 @@ public class Unit {
                 if (!this.building) {
                     this.y += dry;
                     this.x += drx;
+                    this.w=this.nw;
+                    this.h=this.nh;
                 }
                 this.GOAL=null;
                 b=true;
@@ -217,6 +263,8 @@ public class Unit {
                 if (!this.building) {
                     this.y += dry;
                     this.x += drx;
+                    this.w=this.nw;
+                    this.h=this.nh;
                 }
                 this.GOAL=null;
                 b=true;
@@ -271,6 +319,8 @@ public class Unit {
     }
     public void attackImage(int k, int k1, String s) {
         if (this.type!=0) {
+            this.w=this.aw;
+            this.h=this.ah;
             //System.out.println(s);
             //System.out.println(substring);
             String thiss;

@@ -22,16 +22,16 @@ public class Shell {
         if (this.type==2) {
             this.dd = 400;
             this.speed = 60;
-            this.w = 15;
-            this.h = 15;
+            this.w = 30;
+            this.h = 30;
             this.s="";
             this.splash=false;
         }
         else if (this.type==0) {
             this.dd=100;
             this.speed = 60;
-            this.w=30;
-            this.h=30;
+            this.w=45;
+            this.h=45;
             this.splash=false;
         }
         else if (this.type==5) {
